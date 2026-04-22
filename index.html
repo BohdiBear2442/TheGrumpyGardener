@@ -139,7 +139,8 @@
     .modal-close { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: rgba(240,232,216,0.4); cursor: pointer; letter-spacing: 0.1em; background: none; border: none; transition: color 0.2s; }
     .modal-close:hover { color: var(--parchment); }
     .modal-body { padding: 1.75rem; }
-    .modal-photo-slot { width: 100%; height: 190px; background: var(--cream); border: 2px dashed var(--tan); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; overflow: hidden; }
+    .modal-photo-slot { width: 100%; min-height: 190px; max-height: 400px; background: var(--cream); border: 2px dashed var(--tan); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-bottom: 1.5rem; overflow-y: auto; gap: 8px; padding: 8px; box-sizing: border-box; }
+    .modal-photo-slot:empty { justify-content: center; }
     .modal-photo-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(61,42,24,0.3); text-align: center; }
     .modal-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
     .meta-item { border-left: 2px solid var(--moss); padding-left: 0.75rem; }
@@ -437,7 +438,7 @@
 
 <script>
 const zoneData = {
-  tomato:   { title:'🍅 Tomatoes',       status:'Active — 2026',          exp:'9 Years · Core Crop',      best:'2023',               update:'Apr 22, 2026',  notes:'The anchor crop. Every single year since 2017. This season: started Beefy Purple tomatoes indoors in February, cut the suckers and propagated them two ways — one in water, one directly into wet soil under a humidity dome. Both took without issue. The soil propagation thrived faster, but the water method works great as a suspended animation state when you don\'t have room for a humidity dome. Doing the same now with San Marzano suckers on the windowsill.', photo:'images/Propogated Purple Beef Tomatoes.jpg', photo2:'images/San Marzano Mother Plant.jpg', photo3:'images/San Marzano Water Propogation.jpg', tags:['Beefy Purple','San Marzano','Core Crop','Started Indoors','Water Propagation','Soil Propagation'] },
+  tomato:   { title:'🍅 Tomatoes',       status:'Active — 2026',          exp:'9 Years · Core Crop',      best:'2023',               update:'Apr 22, 2026',  notes:'The anchor crop. Every single year since 2017. This season: started Beefy Purple tomatoes indoors in February, cut the suckers and propagated them two ways — one in water, one directly into wet soil under a humidity dome. Both took without issue. The soil propagation thrived faster, but the water method works great as a suspended animation state when you don\'t have room for a humidity dome. Doing the same now with San Marzano suckers on the windowsill.', photo:'images/Propogated Purple Beef Tomatoes.jpg', photo2:'images/San Marzano Mother Plant.jpg', photo3:'images/San Marzano Water Propogation.jpg', photo4:'images/uploads/img_2676.jpg', photo5:'images/uploads/img_2734.jpg', photo6:'images/uploads/img_2800.jpg', photo7:'images/uploads/img_2882.jpg', photo8:'images/uploads/img_2932.jpg', tags:['Beefy Purple','San Marzano','Core Crop','Started Indoors','Water Propagation','Soil Propagation'] },
   corn:     { title:'🌽 Corn',           status:'Active — 2026',          exp:'9 Years · Core Crop',       best:'2022',               update:'Spring 2026',   notes:'Crowd planted in blocks. Experts say give them space. I say pack them in and tend them hard. Results have been consistently good.',                                       tags:['Block Planted','Sweet Corn','Crowd Technique','Zone 5b'] },
   sunflower:{ title:'🌻 Sunflowers',     status:'Active — 2026',          exp:'9 Years',                   best:'Every Year',         update:'Spring 2026',   notes:'Not food, not technically necessary, completely non-negotiable. They go in every year. Bohdi walks past them like he owns the place.',                                    tags:['Mammoth','Dwarf','Multi-head','Perimeter'] },
   melon:    { title:'🍉 Watermelons',    status:'Active — 2026',          exp:'9 Years · Signature Crop',  best:'2024',               update:'Spring 2026',   notes:'Zone 5b watermelons should not work as well as they do. The seed packets don\'t say this is possible. Start them early inside, give them the hottest spot, and let them run.', tags:['Zone 5b Push','Started Indoors','Long Season','Signature Crop'] },
@@ -457,7 +458,13 @@ function openZone(id) {
   document.getElementById('modalNotes').textContent = d.notes;
 const photoSlot = document.getElementById('modalPhotoSlot');
 if (d.photo) {
-  photoSlot.innerHTML = `<img src="${d.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;" />${d.photo2 ? `<img src="${d.photo2}" style="width:100%;border-radius:8px;margin-bottom:8px;" />` : ''}${d.photo3 ? `<img src="${d.photo3}" style="width:100%;border-radius:8px;" />` : ''}`;
+  let photoHTML = `<img src="${d.photo}" style="width:100%;border-radius:8px;flex-shrink:0;" />`;
+  let i = 2;
+  while(d['photo' + i]) {
+    photoHTML += `<img src="${d['photo' + i]}" style="width:100%;border-radius:8px;flex-shrink:0;" />`;
+    i++;
+  }
+  photoSlot.innerHTML = photoHTML;
 } else {
   photoSlot.innerHTML = '<div class="modal-photo-label">Photo coming — drop your shot here</div>';
 }
