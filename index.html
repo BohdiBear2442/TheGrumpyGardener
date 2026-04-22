@@ -455,6 +455,12 @@ function openZone(id) {
   document.getElementById('modalBest').textContent = d.best;
   document.getElementById('modalUpdate').textContent = d.update;
   document.getElementById('modalNotes').textContent = d.notes;
+const photoSlot = document.getElementById('modalPhotoSlot');
+if (d.photo) {
+  photoSlot.innerHTML = `<img src="${d.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;" />${d.photo2 ? `<img src="${d.photo2}" style="width:100%;border-radius:8px;margin-bottom:8px;" />` : ''}${d.photo3 ? `<img src="${d.photo3}" style="width:100%;border-radius:8px;" />` : ''}`;
+} else {
+  photoSlot.innerHTML = '<div class="modal-photo-label">Photo coming — drop your shot here</div>';
+}
   document.getElementById('modalTags').innerHTML = d.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
   document.getElementById('zoneModal').classList.add('open');
 }
