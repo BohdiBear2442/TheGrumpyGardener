@@ -94,7 +94,7 @@
     /* ── GARDEN MAP ── */
     .garden-map-section { background: var(--cream); padding: 5rem 4rem; }
     .garden-map {
-      display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(6, 72px);
+      display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(7, 72px);
       gap: 5px; background: var(--tan); border: 2px solid var(--mud); padding: 5px; position: relative;
     }
     .zone-card {
@@ -113,6 +113,7 @@
     .zone-card.z-bean   { background: #1a3820; border-color: #3d7040; }
     .zone-card.z-sun    { background: #2a2010; border-color: var(--gold); }
     .zone-card.z-shed   { background: #2a2520; border-color: #5a5048; cursor: default; }
+    .zone-card.z-berry  { background: #5a1a2a; border-color: #d44a5a; }
     .zone-icon { font-size: 1.5rem; line-height: 1; }
     .zone-name { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(240,232,216,0.7); margin-top: 0.3rem; text-align: center; padding: 0 0.3rem; }
     .zone-status { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; }
@@ -127,6 +128,7 @@
     .g-bean   { grid-column: 5/9;  grid-row: 5/7; }
     .g-herb   { grid-column: 9/13; grid-row: 5/7; }
     .g-shed   { grid-column: 1/5;  grid-row: 6/7; cursor:default; }
+    .g-berry  { grid-column: 1/13; grid-row: 7/8; }
     .map-note { font-family: 'Caveat', cursive; font-size: 0.85rem; color: var(--mud); margin-top: 1rem; opacity: 0.7; }
 
     /* ── MODAL ── */
@@ -241,7 +243,7 @@
       .archive-intro { grid-template-columns: 1fr; gap: 2.5rem; padding: 3.5rem 1.5rem; }
       .archive-stats { grid-template-columns: 1fr 1fr; }
       .garden-map-section, .crops-section, .timeline-section, .blog-section { padding: 3.5rem 1.5rem; }
-      .garden-map { grid-template-rows: repeat(6, 56px); }
+      .garden-map { grid-template-rows: repeat(7, 56px); }
       .posts-grid { grid-template-columns: 1fr; }
       .post-card.featured { grid-row: auto; }
       .bohdi-section { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2rem; }
@@ -309,14 +311,15 @@
   <div class="section-hand">Tap any bed to see what's growing, what happened, and how it went.</div>
   <div class="garden-map">
     <div class="zone-card z-tomato g-tomato" onclick="openZone('tomato')"><div class="zone-status status-active"></div><div class="zone-icon">🍅</div><div class="zone-name">Tomatoes</div></div>
-    <div class="zone-card z-corn g-corn" onclick="openZone('corn')"><div class="zone-status status-active"></div><div class="zone-icon">🌽</div><div class="zone-name">Corn</div></div>
+    <div class="zone-card z-corn g-corn" onclick="openZone('corn')"><div class="zone-status status-planned"></div><div class="zone-icon">🌽</div><div class="zone-name">Corn</div></div>
     <div class="zone-card z-sun g-sun" onclick="openZone('sunflower')"><div class="zone-status status-active"></div><div class="zone-icon">🌻</div><div class="zone-name">Sunflowers</div></div>
     <div class="zone-card z-melon g-melon" onclick="openZone('melon')"><div class="zone-status status-active"></div><div class="zone-icon">🍉</div><div class="zone-name">Watermelons</div></div>
     <div class="zone-card z-squash g-squash" onclick="openZone('squash')"><div class="zone-status status-active"></div><div class="zone-icon">🎃</div><div class="zone-name">Squash / Pumpkin</div></div>
-    <div class="zone-card z-pepper g-pepper" onclick="openZone('pepper')"><div class="zone-status status-planned"></div><div class="zone-icon">🌶️</div><div class="zone-name">Peppers</div></div>
+    <div class="zone-card z-pepper g-pepper" onclick="openZone('pepper')"><div class="zone-status status-active"></div><div class="zone-icon">🌶️</div><div class="zone-name">Bell Peppers & Jalapeños</div></div>
     <div class="zone-card z-bean g-bean" onclick="openZone('bean')"><div class="zone-status status-active"></div><div class="zone-icon">🫘</div><div class="zone-name">Green Beans</div></div>
-    <div class="zone-card z-herb g-herb" onclick="openZone('herb')"><div class="zone-status status-active"></div><div class="zone-icon">🌿</div><div class="zone-name">Herbs</div></div>
+    <div class="zone-card z-herb g-herb" onclick="openZone('herb')"><div class="zone-status status-active"></div><div class="zone-icon">🌿</div><div class="zone-name">Basil, Dill & Marigolds</div></div>
     <div class="zone-card z-shed g-shed"><div class="zone-icon" style="font-size:1rem;">🛖</div><div class="zone-name">Shed</div></div>
+    <div class="zone-card z-berry g-berry" onclick="openZone('berry')"><div class="zone-status status-active"></div><div class="zone-icon">🍓</div><div class="zone-name">Strawberries</div></div>
   </div>
   <div class="map-note">🟢 Active &nbsp;🟡 Planned &nbsp;⚪ Resting — updated as the season unfolds</div>
 </section>
@@ -446,13 +449,14 @@
 <script>
 const zoneData = {
   tomato:   { title:'🍅 Tomatoes',       status:'Active — 2026',          exp:'9 Years · Core Crop',      best:'2023',               update:'Apr 22, 2026',  notes:'The anchor crop. Every single year since 2017. This season: started Beefy Purple tomatoes indoors in February, cut the suckers and propagated them two ways — one in water, one directly into wet soil under a humidity dome. Both took without issue. The soil propagation thrived faster, but the water method works great as a suspended animation state when you don\'t have room for a humidity dome. Doing the same now with San Marzano suckers on the windowsill.', photo:'images/Propogated Purple Beef Tomatoes.jpg', photo2:'images/San Marzano Mother Plant.jpg', photo3:'images/San Marzano Water Propogation.jpg', tags:['Beefy Purple','San Marzano','Core Crop','Started Indoors','Water Propagation','Soil Propagation'] },
-  corn:     { title:'🌽 Corn',           status:'Active — 2026',          exp:'9 Years · Core Crop',       best:'2022',               update:'Spring 2026',   notes:'Crowd planted in blocks. Experts say give them space. I say pack them in and tend them hard. Results have been consistently good.',                                       tags:['Block Planted','Sweet Corn','Crowd Technique','Zone 5b'] },
+  corn:     { title:'🌽 Corn',           status:'Planned — 2026',         exp:'9 Years · Core Crop',       best:'2022',               update:'Spring 2026',   notes:'Crowd planted in blocks. Experts say give them space. I say pack them in and tend them hard. Results have been consistently good.', photo:'images/uploads/img_2800.jpg', tags:['Block Planted','Sweet Corn','Crowd Technique','Zone 5b'] },
   sunflower:{ title:'🌻 Sunflowers',     status:'Active — 2026',          exp:'9 Years',                   best:'Every Year',         update:'Spring 2026',   notes:'Not food, not technically necessary, completely non-negotiable. They go in every year. Bohdi walks past them like he owns the place.',                                    tags:['Mammoth','Dwarf','Multi-head','Perimeter'] },
-  melon:    { title:'🍉 Watermelons',    status:'Active — 2026',          exp:'9 Years · Signature Crop',  best:'2024',               update:'Spring 2026',   notes:'Zone 5b watermelons should not work as well as they do. The seed packets don\'t say this is possible. Start them early inside, give them the hottest spot, and let them run.', tags:['Zone 5b Push','Started Indoors','Long Season','Signature Crop'] },
+  melon:    { title:'🍉 Watermelons',    status:'Active — 2026',          exp:'9 Years · Signature Crop',  best:'2024',               update:'Spring 2026',   notes:'Zone 5b watermelons should not work as well as they do. The seed packets don\'t say this is possible. Start them early inside, give them the hottest spot, and let them run.', photo:'images/uploads/img_2676.jpg', photo2:'images/uploads/img_2871.jpg', photo3:'images/uploads/img_2882.jpg', photo4:'images/uploads/img_2932.jpg', photo5:'images/uploads/img_3090.jpg', photo6:'images/uploads/img_3135.jpg', tags:['Zone 5b Push','Started Indoors','Long Season','Signature Crop'] },
   squash:   { title:'🎃 Squash & Pumpkin',status:'Active — 2026',         exp:'9 Years',                   best:'2023',               update:'Spring 2026',   notes:'Summer squash, winter squash, zucchini, pumpkins — all of them, all the time. Zucchini will take over your whole life if you let it. I let it.',                     tags:['Zucchini','Butternut','Acorn','Pumpkin','Prolific'] },
-  pepper:   { title:'🌶️ Peppers',       status:'Planned — 2026',         exp:'9 Years',                   best:'2022',               update:'Pre-Season',    notes:'Hot peppers, sweet peppers, banana peppers. Short NH season means starting these inside early — usually February. Worth the space on the seed shelf.',               tags:['Hot','Sweet','Started Feb','Indoor Start'] },
+  pepper:   { title:'🌶️ Bell Peppers & Jalapeños',       status:'Active — 2026',          exp:'9 Years',                   best:'2022',               update:'Pre-Season',    notes:'Hot peppers, sweet peppers, banana peppers. Short NH season means starting these inside early — usually February. Worth the space on the seed shelf.', photo:'images/uploads/img_3374.jpg', tags:['Hot','Sweet','Started Feb','Indoor Start'] },
   bean:     { title:'🫘 Green Beans',    status:'Active — 2026, Returning',exp:'2+ Years · Breakthrough',  best:'2025 — Bags of them',update:'Spring 2026',   notes:'The surprise of 2025. I planted them thinking modest yield. What actually happened was bag after bag after bag. Going bigger in 2026.',                             tags:['Bush Bean','Pole Bean','Breakthrough 2025','High Yield'] },
-  herb:     { title:'🌿 Herbs',          status:'Active — 2026',          exp:'9 Years',                   best:'Every year honestly', update:'Spring 2026',   notes:'Basil and dill are the constants. Both incredibly forgiving. Gateway crops if you\'re just starting out.',                                                            tags:['Basil','Dill','Container','Easy Win'] }
+  herb:     { title:'🌿 Basil, Dill & Marigolds',          status:'Active — 2026',          exp:'9 Years',                   best:'Every year honestly', update:'Spring 2026',   notes:'Basil and dill are the constants. Both incredibly forgiving. Gateway crops if you\'re just starting out.',                                                            tags:['Basil','Dill','Container','Easy Win'] },
+  berry:    { title:'🍓 Strawberries',   status:'Active — 2026',          exp:'1st Year',                  best:'2026',               update:'Apr 22, 2026',   notes:'New zone this year. Setting up a dedicated patch.', photo:'images/uploads/Strawberries 2026.jpg', tags:['Strawberries','New Zone'] }
 };
 
 function openZone(id) {
